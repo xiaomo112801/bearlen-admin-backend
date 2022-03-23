@@ -1,7 +1,7 @@
 <?php
 return [
     // 文档标题
-    'title'              => 'API接口文档',
+    'title'              => 'bearlen-admin API接口文档',
     // 文档描述
     'desc'               => '',
     // 默认请求类型
