@@ -12,7 +12,12 @@ const config = {
     // 接口响应超时时间
     TIMEOUT: 30000,
     // 多个可切换的host
-    HOSTS: [],
+    HOSTS: [
+      {
+        title:"",
+        host:"index.php"
+      }
+    ],
     // 请求头 encodeURIComponent 转码
     HEADERS_ENCODEURICOMPONENT: false,
   },
