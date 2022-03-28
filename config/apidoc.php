@@ -9,7 +9,21 @@ return [
     // 允许跨域访问
     'allowCrossDomain' => false,
     // 设置可选版本
-    'apps' => [],
+    'apps' => [
+        [
+            'title' => 'admin',
+            'path' => 'app/admin/controller',
+            'folder' => 'admin',
+            'group' => [
+                ['title' => '登录', 'name' => 'login']
+            ]
+        ],
+        [
+            'title' => 'api',
+            'path' => 'app/api/controller',
+            'folder' => 'api'
+        ]
+    ],
     // 自动生成url规则
     'auto_url' => [
         // 字母规则
@@ -47,5 +61,6 @@ return [
     ],
     // md文档
     'docs' => [],
+
 
 ];
