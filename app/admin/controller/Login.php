@@ -3,7 +3,9 @@
 namespace app\admin\controller;
 
 use app\BaseController;
+use app\model\User;
 use thans\jwt\JWTAuth;
+use app\facade\Captcha;
 use think\exception\HttpException;
 use think\exception\ValidateException;
 use hg\apidoc\annotation as Apidoc;
@@ -18,8 +20,9 @@ class Login extends BaseController
 
     /**
      * @Apidoc\Title("用户登录接口")
+     * @Apidoc\Url("/admin/sign")
      */
-    public function sign(JWTAuth $jwt)
+    public function sign(User $user, JWTAuth $jwt)
     {
         try {
 
@@ -33,17 +36,23 @@ class Login extends BaseController
                 'user_name' => $user_name,
                 'password' => $password
             ];
-
+//            $user
             $this->validate($data, $rule);
 
             return ['token' => "Bearer "];
         } catch (HttpException $httpException) {
-            return json($httpException->getMessage(), 500);
+            return json('error', ['message' => $httpException->getMessage()], 500);
         } catch (ValidateException $validateException) {
-            return json($validateException->getError());
+            return json('error', ['message' => $validateException->getError()], 500);
         } catch (\Exception $e) {
-            return $e->getMessage();
+            return json('error', ['message', $e->getMessage()], 500);
         }
+    }
+
+    public function verify()
+    {
+        $verify = Captcha::create();
+        return json('success', ['verify' => $verify]);
     }
 
 }
