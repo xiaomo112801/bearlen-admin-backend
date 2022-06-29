@@ -3,47 +3,66 @@
 namespace app\admin\controller;
 
 use app\BaseController;
+use app\model\User;
 use thans\jwt\JWTAuth;
+use think\captcha\facade\Captcha;
+use think\db\exception\DbException;
 use think\exception\HttpException;
 use think\exception\ValidateException;
 use hg\apidoc\annotation as Apidoc;
 
 
 /**
- * @Apidoc\Title（"用户登录控制器"）
- * @Apidoc\Group("login")
+ * @Apidoc\Title（"登录"）
+ * @Apidoc\Group("Login")
+ *
  */
 class Login extends BaseController
 {
 
     /**
      * @Apidoc\Title("用户登录接口")
+     * @Apidoc\Method("POST")
      */
-    public function sign(JWTAuth $jwt)
+    public function sign(JWTAuth $jwt,User $user)
     {
         try {
-
             $user_name = input("post.username");
             $password = input("post.password");
+            $verity_code = input("post.verity_code");
             $rule = [
                 "user_name" => "require",
-                "password" => "require|length:8,16"
+                "password" => "require|length:8,16",
+//                "verity_code" => "require",
             ];
             $data = [
                 'user_name' => $user_name,
-                'password' => $password
+                'password' => $password,
+//                'verity_code' => $verity_code
             ];
-
             $this->validate($data, $rule);
 
             return ['token' => "Bearer "];
         } catch (HttpException $httpException) {
             return json($httpException->getMessage(), 500);
         } catch (ValidateException $validateException) {
-            return json($validateException->getError());
+            return json(['code' => -1, 'message' => $validateException->getError()]);
+        } catch (DbException $dbException) {
+            return json($dbException->getMessage(), $dbException->getCode());
         } catch (\Exception $e) {
             return $e->getMessage();
         }
+    }
+
+
+    /**
+     * @Apidoc\Title("获取验证码")
+     * @Apidoc\Method("get")
+     *
+     */
+    public function getVerifyCode()
+    {
+        return Captcha::create();
     }
 
 }

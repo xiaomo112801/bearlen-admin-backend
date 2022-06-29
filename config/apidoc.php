@@ -15,7 +15,7 @@ return [
             'path' => 'app/admin/controller',
             'folder' => 'admin',
             'group' => [
-                ['title' => '登录', 'name' => 'login']
+                ['title' => '登录', 'name' => '登录']
             ]
         ],
         [
