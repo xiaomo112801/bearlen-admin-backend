@@ -9,4 +9,4 @@ Route::group(function () {
 })->middleware(\app\middleware\JWT::class);
 
 Route::post('sign', 'login/sign');
-Route::get('verify/:s', 'login/getVerifyCode');
+Route::get('verify', 'login/getVerifyCode');

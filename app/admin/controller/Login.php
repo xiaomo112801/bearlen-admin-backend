@@ -5,7 +5,7 @@ namespace app\admin\controller;
 use app\BaseController;
 use app\model\User;
 use thans\jwt\JWTAuth;
-use think\captcha\facade\Captcha;
+use captcha\Captcha;
 use think\db\exception\DbException;
 use think\exception\HttpException;
 use think\exception\ValidateException;
@@ -24,7 +24,7 @@ class Login extends BaseController
      * @Apidoc\Title("用户登录接口")
      * @Apidoc\Method("POST")
      */
-    public function sign(JWTAuth $jwt,User $user)
+    public function sign(JWTAuth $jwt, User $user)
     {
         try {
             $user_name = input("post.username");
@@ -32,13 +32,11 @@ class Login extends BaseController
             $verity_code = input("post.verity_code");
             $rule = [
                 "user_name" => "require",
-                "password" => "require|length:8,16",
-//                "verity_code" => "require",
+                "password" => "require|length:8,16"
             ];
             $data = [
                 'user_name' => $user_name,
-                'password' => $password,
-//                'verity_code' => $verity_code
+                'password' => $password
             ];
             $this->validate($data, $rule);
 
@@ -60,9 +58,10 @@ class Login extends BaseController
      * @Apidoc\Method("get")
      *
      */
-    public function getVerifyCode()
+    public function getVerifyCode(Captcha $captcha)
     {
-        return Captcha::create();
+        $image = $captcha->create();
+        return (['code' => 0, 'message' => '操作成功', "data" => base64_encode($image)]);
     }
 
 }
