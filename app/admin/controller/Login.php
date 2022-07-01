@@ -85,6 +85,9 @@ class Login extends BaseController
     public function loginOut()
     {
 //        JWTAuth::
+        $payload=JWTAuth::auth();
+        $tokenStr = JWTAuth::token()->get();
+        JWTAuth::invalidate($tokenStr);
     }
 
 }

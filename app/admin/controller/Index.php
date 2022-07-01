@@ -9,7 +9,7 @@ use hg\apidoc\annotation as Apidoc;
  * @Apidoc\Title("基础示例")
  * @Apidoc\Group("base")
  */
-class Index
+class Index extends AdminBase
 {
 
     /**
