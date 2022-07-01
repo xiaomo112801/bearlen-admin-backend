@@ -117,9 +117,7 @@ class Captcha //extends BaseCaptcha
 
         $hash = password_hash($key, PASSWORD_BCRYPT, ['cost' => 10]);
 
-        $this->cache->set('captcha', [
-            'key' => $hash,
-        ]);
+        $this->cache->set('captcha',  $hash);
 
         return [
             'value' => $bag,
@@ -139,7 +137,7 @@ class Captcha //extends BaseCaptcha
             return false;
         }
 
-        $key = $this->cache->get('captcha.key');
+        $key = $this->cache->get('captcha');
 
         $code = mb_strtolower($code, 'UTF-8');
 

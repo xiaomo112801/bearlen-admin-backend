@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use app\BaseController;
 use app\model\User;
+use thans\jwt\exception\JWTException;
 use thans\jwt\facade\JWTAuth;
 use captcha\Captcha;
 use think\db\exception\DbException;
@@ -22,6 +23,7 @@ class Login extends BaseController
 
     /**
      * @Apidoc\Title("用户登录接口")
+     * @Apidoc\Url("/admin/sign")
      * @Apidoc\Method("POST")
      * @Apidoc\Param("username", type="stirng",require=true, desc="用户名")
      * @Apidoc\Param("password", type="stirng",require=true, desc="密码")
@@ -72,8 +74,12 @@ class Login extends BaseController
 
     /**
      * @Apidoc\Title("获取验证码")
-     * @Apidoc\Method("get")
-     *
+     * @Apidoc\Url("/admin/verify")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Param("username", type="stirng",require=true, desc="用户名")
+     * @Apidoc\Param("password", type="stirng",require=true, desc="密码")
+     * @Apidoc\Param("verficationCode", type="stirng",require=true, desc="验证码")
+     * @Apidoc\Returned("data", type="string", desc="token",replaceGlobal=true)
      */
     public function getVerifyCode(Captcha $captcha)
     {
@@ -82,12 +88,23 @@ class Login extends BaseController
     }
 
 
+    /**
+     * @Apidoc\Title("用户退出接口")
+     * @Apidoc\Url("/admin/loginOut")
+     * @Apidoc\Method("POST")
+     * @Apidoc\Returned("data", type="boolen", desc="是否退出成功",replaceGlobal=true)
+     */
     public function loginOut()
     {
 //        JWTAuth::
-        $payload=JWTAuth::auth();
-        $tokenStr = JWTAuth::token()->get();
-        JWTAuth::invalidate($tokenStr);
+        try {
+            JWTAuth::auth();
+            $tokenStr = JWTAuth::token()->get();
+            JWTAuth::invalidate($tokenStr);
+        } catch (JWTException $JWTException) {
+            return ['code' => $JWTException->getCode(), 'message' => $JWTException->getMessage()];
+        }
+
     }
 
 }
