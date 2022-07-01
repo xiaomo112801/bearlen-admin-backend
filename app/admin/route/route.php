@@ -10,3 +10,4 @@ Route::group(function () {
 
 Route::post('sign', 'login/sign');
 Route::get('verify', 'login/getVerifyCode');
+Route::get('loginOut', 'login/loginOut');

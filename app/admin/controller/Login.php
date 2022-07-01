@@ -4,7 +4,7 @@ namespace app\admin\controller;
 
 use app\BaseController;
 use app\model\User;
-use thans\jwt\JWTAuth;
+use thans\jwt\facade\JWTAuth;
 use captcha\Captcha;
 use think\db\exception\DbException;
 use think\exception\HttpException;
@@ -23,32 +23,49 @@ class Login extends BaseController
     /**
      * @Apidoc\Title("用户登录接口")
      * @Apidoc\Method("POST")
+     * @Apidoc\Param("username", type="stirng",require=true, desc="用户名")
+     * @Apidoc\Param("password", type="stirng",require=true, desc="密码")
+     * @Apidoc\Param("verficationCode", type="stirng",require=true, desc="验证码")
+     * @Apidoc\Returned("data", type="string", desc="token",replaceGlobal=true)
      */
-    public function sign(JWTAuth $jwt, User $user)
+    public function sign(User $user, Captcha $captcha)
     {
         try {
-            $user_name = input("post.username");
+            $username = input("post.username");
             $password = input("post.password");
-            $verity_code = input("post.verity_code");
+            $verity_code = input("post.verficationCode");
             $rule = [
-                "user_name" => "require",
-                "password" => "require|length:8,16"
+                "username" => "require",
+                "password" => "require|length:8,16",
+                "verity_code" => "require"
             ];
             $data = [
-                'user_name' => $user_name,
-                'password' => $password
+                'username' => $username,
+                'password' => $password,
+                'verity_code' => $verity_code
             ];
-            $this->validate($data, $rule);
+            $this->validate($data, $rule); //验证数据，不通过通过数据校验类抛出异常
+            if (!$captcha->check($verity_code)) {
+                return json(['code' => -1, 'message' => '验证码校验错误']);
+            }
+            $userInfo = $user->where(['username' => $username, 'password' => encryption($password)])->find();
+            if (!$userInfo['uid']) {
+                return json(['code' => -1, 'message' => '用户名或密码错误']);
+            }
+            $payload = [
+                'uid' => $userInfo['uid'],
+            ];
+            $token = JWTAuth::builder($payload);//创建token
 
-            return ['token' => "Bearer "];
+            return json(['code' => 1, 'message' => '登录成功', 'data' => "Bearer " . $token], 200, ['authorization' => "Bearer " . $token]);
         } catch (HttpException $httpException) {
-            return json($httpException->getMessage(), 500);
+            return json(['message' => $httpException->getMessage()], 500);
         } catch (ValidateException $validateException) {
-            return json(['code' => -1, 'message' => $validateException->getError()]);
+            return json(['message' => $validateException->getError()]);
         } catch (DbException $dbException) {
-            return json($dbException->getMessage(), $dbException->getCode());
+            return json(['message' => $dbException->getMessage()], $dbException->getCode());
         } catch (\Exception $e) {
-            return $e->getMessage();
+            return ['code' => $e->getCode(), 'message' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine()];
         }
     }
 
@@ -62,6 +79,12 @@ class Login extends BaseController
     {
         $image = $captcha->create();
         return (['code' => 0, 'message' => '操作成功', "data" => base64_encode($image)]);
+    }
+
+
+    public function loginOut()
+    {
+//        JWTAuth::
     }
 
 }
