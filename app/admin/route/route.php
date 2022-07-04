@@ -6,8 +6,12 @@ use think\facade\Route;
 Route::group(function () {
 
     Route::get('user:uid', 'user/index');
-})->middleware(\app\middleware\JWT::class);
+})->middleware(thans\jwt\middleware\JWTAuthAndRefresh::class);
 
-Route::post('sign', 'login/sign');
-Route::get('verify', 'login/getVerifyCode');
+Route::post('sign', 'login/sign')->middleware(\think\middleware\Throttle::class, [
+    'visit_rate' => '5/m'
+]);
+Route::get('verify', 'login/getVerifyCode')->middleware(\think\middleware\Throttle::class, [
+    'visit_rate' => '10/m'
+]);;
 Route::post('loginOut', 'login/loginOut');

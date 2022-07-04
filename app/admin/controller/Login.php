@@ -96,7 +96,7 @@ class Login extends BaseController
      */
     public function loginOut()
     {
-//        JWTAuth::
+
         try {
             JWTAuth::auth();
             $tokenStr = JWTAuth::token()->get();
