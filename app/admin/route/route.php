@@ -6,6 +6,8 @@ use think\facade\Route;
 Route::group(function () {
 
     Route::get('user:uid', 'user/index');
+
+    Route::get('getMenuList', 'Menu/getMenuList');
 })->middleware(thans\jwt\middleware\JWTAuthAndRefresh::class);
 
 Route::post('sign', 'login/sign')->middleware(\think\middleware\Throttle::class, [

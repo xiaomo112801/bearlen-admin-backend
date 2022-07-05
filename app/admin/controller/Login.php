@@ -96,11 +96,11 @@ class Login extends BaseController
      */
     public function loginOut()
     {
-
         try {
             JWTAuth::auth();
             $tokenStr = JWTAuth::token()->get();
             JWTAuth::invalidate($tokenStr);
+            return json(['code' => 1, 'message' => '退出成功']);
         } catch (JWTException $JWTException) {
             return ['code' => $JWTException->getCode(), 'message' => $JWTException->getMessage()];
         }
