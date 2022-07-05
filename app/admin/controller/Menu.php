@@ -2,13 +2,13 @@
 
 namespace app\admin\controller;
 
-use app\model\Menu as MenuModel;
+use app\logic\Menu as MenuLogic;
 
 class Menu extends adminBase
 {
 
 
-    public function getMenuList(MenuModel $menu)
+    public function getMenuList(MenuLogic $menu): \think\response\Json
     {
         return json(['code'=>1,'data'=>$menu->getMenuList(),'message'=>'操作成功']);
     }

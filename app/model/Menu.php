@@ -8,8 +8,8 @@ class Menu extends Model
 {
 
 
-    public function getMenuList()
+    public function getMenuList(): array
     {
-        return $this->select();
+        return $this->select()->toArray();
     }
 }
