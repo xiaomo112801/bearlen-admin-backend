@@ -12,6 +12,7 @@ class System extends AdminBase
 
         $roleList = $role->getRoleList(1, 20, []);
         return json($roleList);
+
     }
 
 }

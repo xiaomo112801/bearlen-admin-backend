@@ -14,5 +14,5 @@ Route::post('sign', 'login/sign')->middleware(\think\middleware\Throttle::class,
 ]);
 Route::get('verify', 'login/getVerifyCode')->middleware(\think\middleware\Throttle::class, [
     'visit_rate' => '10/m'
-]);;
+]);
 Route::post('loginOut', 'login/loginOut');

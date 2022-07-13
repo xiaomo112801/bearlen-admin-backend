@@ -4,7 +4,7 @@ namespace app\admin\controller;
 
 use app\logic\Menu as MenuLogic;
 
-class Menu extends adminBase
+class Menu extends AdminBase
 {
 
 

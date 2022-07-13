@@ -67,7 +67,7 @@ class Login extends BaseController
         } catch (DbException $dbException) {
             return json(['message' => $dbException->getMessage()], $dbException->getCode());
         } catch (\Exception $e) {
-            return ['code' => $e->getCode(), 'message' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine()];
+            return json(['code' => $e->getCode(), 'message' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine()]);
         }
     }
 
