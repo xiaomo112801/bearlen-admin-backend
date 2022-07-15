@@ -4,9 +4,12 @@ use think\facade\Route;
 
 
 Route::group(function () {
-    Route::get('user:uid', 'user/index');
+    Route::get('user:uid', 'User/index');
     Route::get('getMenuList', 'Menu/getMenuList');
     Route::get('getRoleList', 'System/getRoleList');
+
+    Route::post('addRole', 'System/addRole');
+    Route::post('modifyPassword','User/modifyPassword');
 })->middleware(thans\jwt\middleware\JWTAuthAndRefresh::class);
 
 Route::post('sign', 'login/sign')->middleware(\think\middleware\Throttle::class, [
