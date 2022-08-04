@@ -7,6 +7,7 @@ use thans\jwt\exception\JWTException;
 use thans\jwt\facade\JWTAuth;
 use think\App;
 use think\Exception;
+use think\Request;
 
 /**
  * ADMIN模块基类
@@ -14,9 +15,12 @@ use think\Exception;
 class AdminBase extends BaseController
 {
 
-    public function __construct(App $app)
+    protected $uid;
+
+    public function __construct(App $app, Request $request)
     {
         parent::__construct($app);
+        $this->uid = $request->uid;
     }
 
 

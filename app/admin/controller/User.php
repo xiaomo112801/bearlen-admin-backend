@@ -2,7 +2,9 @@
 
 namespace app\admin\controller;
 
+use app\Request;
 use think\exception\ValidateException;
+use app\model\User as UserModel;
 
 class User extends AdminBase
 {
@@ -13,9 +15,15 @@ class User extends AdminBase
     }
 
 
+    public function getUserPermissions()
+    {
+
+    }
+
+
     public function modifyPassword()
     {
-        try{
+        try {
             $old_password = input('post.oldPassword', '');
             $new_password = input('post.newPassword', '');
             $re_new_password = input('post.reNewPassword', '');
@@ -33,10 +41,21 @@ class User extends AdminBase
             $this->validate($data, $rule);
 
 
-        }catch (ValidateException $validateException){
+        } catch (ValidateException $validateException) {
             return json(['message' => $validateException->getError()]);
         }
 
+    }
+
+
+    public function getUserInfo(UserModel $user, Request $request)
+    {
+        $data = [
+            'code' => 1,
+            'data' => $user->find($request->uid)->toArray(),
+            'message' => '操作成功'
+        ];
+        return json($data);
     }
 
 
