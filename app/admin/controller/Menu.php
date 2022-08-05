@@ -10,7 +10,7 @@ class Menu extends AdminBase
 
     public function getMenuList(MenuLogic $menu): \think\response\Json
     {
-        return json(['code'=>1,'data'=>$menu->getMenuList(),'message'=>'操作成功']);
+        return json(['code'=>1,'data'=>$menu->getMenuList($this->uid),'message'=>'操作成功']);
     }
 
 

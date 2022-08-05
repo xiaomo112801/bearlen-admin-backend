@@ -7,8 +7,15 @@ class Menu extends BaseModel
 {
 
 
-    public function getMenuList(): array
+    public function getMenuList($condition): array
     {
-        return $this->select()->toArray();
+
+
+        return $this
+            ->where($condition)
+            ->field('id,title,pid,icon,module,url,type,menu_type,sort,level,index,permissions')
+            ->order('id asc')
+            ->select()
+            ->toArray();
     }
 }
